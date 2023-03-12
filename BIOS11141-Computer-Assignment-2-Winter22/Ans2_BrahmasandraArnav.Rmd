@@ -1,0 +1,511 @@
+##Computer Assignment 2 Answers File
+--
+Please write your answers into the space below the questions. Knit this file when you are done to check that all code runs. Remember to rename the file to contain *your actual* Last and First name.
+--
+RUN THE FOLLOWING PREREQUISITE CHUNK
+```{r}
+#--for Q1
+id <- c("ENO2", "TDH3", "RPL39", "GAL4", "POL12", "EST2") #protein codes
+protName <- c("enolase", "glyceraldehyde-3-phosphate dehydrogenase", "60S ribosomal protein L39", "regulatory protein Gal4", "DNA polymerase subunit alpha B", "telomerase reverse transcriptase") #full protein names
+abundance <- c(24563, 22369, 16232, 32.3, 13.7, 0.01) #cellular abundance in ppm
+length <- c(437, 332, 51, 881, 705, 884) #number of amino acids
+yeastProt <- data.frame(id, protName, abundance, length)
+#--for Q2 and onwards
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager") #installs Bioconductor
+BiocManager::install("multtest") #uses Bioconductor's installation tool to install the multtest package
+library(multtest) #loads a library of tools included in the multtest package, including the golub data
+data(golub) #loads the golub data set
+
+```
+--
+
+```{r}
+yeastProt[yeastProt[,3] > 500, 3]
+```
+<span style="color:green"> 1.1 <br> </span>
+<span style="color:blue">
+Indexes into the yeastProt dataframe and selects only the rows such that the value in the third column is greater than 500. Out of these rows, then it selects only the values in the third column.
+</span>
+
+
+```{r}
+#yeastProt[,1]  
+#yeastProt[1,] 
+#yeastProt[1:3,c(1,3)] 
+#yeastProt[1,1]  
+```
+<span style="color:green"> 1.2 <br> \span
+<span style="color:blue">
+The first argument into the [] brackets after the name of the dataframe tells you what rows to select, and the second argument specifies which columns to select. The columns index from left to right, and rows from top to bottom.
+</span>
+
+
+<span style="color:green"> 1.3 \span
+```{r}
+# Rewrite the above command (yeastProt[yeastProt[,3] > 500, 3]) with two different notations for data frame indexing that generate the same output.
+
+yeastProt[1:3, "abundance"]
+yeastProt$abundance[1:3]
+
+```
+
+
+<span style="color:green"> 1.4 \span
+```{r}
+# Construct a command that generates a new data frame named filteredyeastProt that consists of information from proteins with an abundance greater than 21000 ppm.
+
+filteredyeastProt <- yeastProt[yeastProt[,"abundance"] > 21000,]
+filteredyeastProt
+```
+
+
+<span style="color:green"> 2.1 <br> \span
+<span style="color:blue">
+In a matrix in R, you cannot mix different types of data. The gene expression data is numerical, while the gene names data is text so they cannot be stored in a single matrix.
+</span>
+
+
+<span style="color:green"> 2.2 \span
+```{r}
+# Using the information encoded in golub.cl, which columns in the golub matrix represent patients with ALL and which columns represent patients with AML?
+
+# 1 codes for AML; 0 for ALL
+
+# patients with AML
+AML_pats <- which(golub.cl == 1)
+AML_pats
+
+# patients with ALL
+ALL_pats <- which(golub.cl == 0)
+ALL_pats
+```
+
+
+<span style="color:green"> 2.3 <br> \span
+<span style="color:blue">
+The row that contains the data for cyclin D3 is 1042
+</span>
+```{r}
+# find the row that contains the data for cyclin D3
+
+cycD3_row <- grep("cyclin D3", golub.gnames[,2], ignore.case = TRUE)
+cycD3_row
+```
+
+
+<span style="color:green"> 2.4 \span
+```{r}
+# calculate the mean expression of cyclin D3 mRNA in ALL patients and then in AML patients 
+cycD3_ALL <- mean(golub[cycD3_row, ALL_pats])
+cycD3_ALL
+
+cycD3_AML <- mean(golub[cycD3_row, AML_pats])
+cycD3_AML
+```
+
+<span style="color:green"> 2.5 \span
+```{r}
+# Run the t-test on cyclin D3 expression values, report the p-value, and interpret its meaning
+t.test(golub[cycD3_row,ALL_pats],golub[cycD3_row,AML_pats])
+```
+
+<span style="color:blue">
+The p value is 9.871 * 10e-6, which is much less than 0.05. This implies that we can conclude that the different values for the two groups (AML patients and ALL patients) did not just occur due to chance.
+</span>
+
+<span style="color:green"> 2.6 \span
+```{r}
+meanALL2 <- apply(golub[,ALL_pats], 1, mean) 
+
+# second apply command to compute the mean expression of each gene for AML patients
+meanAML2 <- apply(golub[,AML_pats], 1, mean)
+
+# the absolute value of the difference in means between ALL and AML patients
+absDiff <- abs(meanALL2 - meanAML2)
+```
+
+
+<span style="color:green"> 2.7 \span
+```{r}
+# return the names of the 7 genes that have the largest absolute difference in mean expression between ALL and AML patients
+
+o <- order(absDiff, decreasing=TRUE)
+golub.gnames[o[1:7], 2]
+```
+
+
+<span style="color:green"> 2.8 (a) Compare the top 5 differentially expressed genes to those that were used as the predictive set in Figure 3 of the Golub et al. paper which of these genes is not used in the set of predictors? <br> \span
+
+<span style="color:blue"> 
+MPO Myeloperoxidase was not used in the set of predictors in Figure 3 of the Golub at al. paper 
+</span>
+
+
+<span style="color:green"> 2.8 (b) Why might a ranking based solely on differences in mean expression be an inadequate metric for determining the best predictors of cancer subtype? <br> \span
+<span style="color:blue">
+There may also be a high variance of the gene expression within each subtype. This would make using only the means less accurate.
+</span>
+
+
+<span style="color:green"> 2.8 (c) What might be a better statistical metric for identifying genes to become part of the predictive set? (If you are stuck, feel free to browse the Golub et al. paper to see what they actually did, though this is not necessarily the only correct answer.) <br> \span
+<span style="color:blue">
+One method of identifying genes to become a part of the predictive set is using a method called "neighborhood analysis". They define an "idealized expression pattern" corresponding to a gene that is uniformly high in one class and uniformly low in the other. Then, they test if there is a high density of genes "nearby" this idealized pattern. These genes are selected for the predictive set.
+</span>
+
+
+<span style="color:green"> 2.9 \span
+```{r}
+gol.fac <- factor(golub.cl, levels=c(0,1), labels = c("ALL","AML"))
+gol.fac
+```
+<span style="color:blue">
+The command is taking the golub.cl vector and creating a new vector that replaces the 0, 1 labels to "ALL" and "AML" respectively.
+</span>
+
+
+<span style="color:green"> 3.1 \span 
+```{r}
+# makes a scatter plot of the gene expression data of the 1042th gene in the golub database. The patients are on the x-axis, and the respective gene expression is on the y-axis. 
+# first argument adds the data to the plot
+plot(golub[1042,])  
+
+# pch=2 -- changes the specific character that will be plotted. Switches from circles to triangles
+plot(golub[1042,], pch=2)  
+
+# col=28 -- changes the color of the points plotted to blue
+plot(golub[1042,], col=28)  
+
+# type='l' -- changes the type of plot to a line graph
+plot(golub[1042,], type='l')  
+
+# lty=2 -- changes the solid line to dashed line
+plot(golub[1042,], type='l', lty=2) 
+
+# xlab="patient index" -- adds x label to the graph
+# ylab="normalized cyclin D3 expression" -- adds y label to the graph
+plot(golub[1042,], col=28, xlab="patient index", ylab="normalized cyclin D3 expression")  
+
+# main="Example of plotting in R" -- adds a title to the plot
+plot(golub[1042,], col=28, xlab="patient index", ylab="normalized cyclin D3 expression",main="Example of plotting in R")  
+```
+
+
+<span style="color:green"> 3.2 \span
+```{r}
+stripchart(golub[1042,] ~ gol.fac, main="Cyclin D3 expression in ALL and AML patients", xlab="Patient cancer subtype", ylab="Normalized cyclin D3 expression", method="jitter", vertical=TRUE)
+```
+
+
+<span style="color:green"> 3.3a \span
+```{r}
+# create a scatter plot of the gene expression values for two genes that are used as subtype predictors: IL-8 (row 2663 of golub) and IL-8 precursor (row 2664)
+
+plot(golub[2663,], golub[2664,], col=gol.fac, xlab="IL-8 expression", ylab="IL-8 precursor expression", main="Correlation between IL-8 and IL-8 precursor")
+```
+
+<span style="color:green"> 3.3b \span
+```{r}
+# create a scatter plot of the gene expression values for two genes that are used as subtype predictors: IL-8 (row 2663 of golub) and Zyxin (row 2124)
+
+plot(golub[2663,], golub[2124,], col=gol.fac, xlab="IL-8 expression", ylab="Zyxin expression", main="Correlation between IL-8 and Zyxin")
+```
+
+<span style="color:blue">
+Both the IL-8 precursor and Zyxin seem to have a positive correlation with the IL-8 expression. However, the correlation between IL-8 and the IL-8 precursor visually looks stronger due to the lesser variance and stronger linear trend (atleast visually).
+</span>
+
+
+<span style="color:green"> 3.4 \span
+```{r}
+# histogram of the expression of cyclin D3 in ALL patients
+hist(golub[1042,gol.fac=="ALL"], freq=FALSE, xlab="Normalized cyclin D3 expression", main="Distribution of normalized cyclin D3 expression in ALL")
+
+# overlay the normal distribution curve
+curve(dnorm(x, mean=mean(golub[1042,gol.fac=="ALL"]), sd=sd(golub[1042,gol.fac=="ALL"])), add=TRUE)
+```
+
+
+<span style="color:green"> 3.5 \span
+```{r}
+# Use the par() function to display this plot and the plot of cyclin D3 expression in ALL from 3.4 in a 2x1 array (2 rows and 1 column).
+par(mfrow=c(2, 1))
+
+
+# plot a histogram and normal curve for the distribution of normalized cyclin D3 expression in ALL.
+hist(golub[1042,gol.fac=="ALL"], freq=FALSE, xlab="Normalized cyclin D3 expression", main="Distribution of normalized cyclin D3 expression in ALL")
+curve(dnorm(x, mean=mean(golub[1042,gol.fac=="ALL"]), sd=sd(golub[1042,gol.fac=="ALL"])), add=TRUE)
+
+# plot a histogram and normal curve for the distribution of normalized cyclin D3 expression in AML. 
+hist(golub[1042,gol.fac=="AML"], freq=FALSE, xlab="Normalized cyclin D3 expression", main="Distribution of normalized cyclin D3 expression in AML")
+curve(dnorm(x, mean=mean(golub[1042,gol.fac=="AML"]), sd=sd(golub[1042,gol.fac=="AML"])), add=TRUE)
+
+```
+<br>
+<span style="color:blue">
+Visually, it looks as though the cyclic D3 expression in ALL is more normally distributed.
+</span>
+
+<span style="color:green"> 3.6 \span
+```{r}
+# Use the par() function to display this plot and the plot of cyclin D3 expression in ALL from 3.4 in a 2x1 array (2 rows and 1 column).
+par(mfrow=c(2, 1))
+
+
+# plot a histogram and normal curve for the distribution of normalized cyclin D3 expression in ALL.
+hist(golub[1042,gol.fac=="ALL"], freq=FALSE, xlab="Normalized cyclin D3 expression", main="Distribution of normalized cyclin D3 expression in ALL", xlim=c(-1,3))
+curve(dnorm(x, mean=mean(golub[1042,gol.fac=="ALL"]), sd=sd(golub[1042,gol.fac=="ALL"])), add=TRUE)
+
+# plot a histogram and normal curve for the distribution of normalized cyclin D3 expression in AML. 
+hist(golub[1042,gol.fac=="AML"], freq=FALSE, xlab="Normalized cyclin D3 expression", main="Distribution of normalized cyclin D3 expression in AML", xlim=c(-1,3))
+curve(dnorm(x, mean=mean(golub[1042,gol.fac=="AML"]), sd=sd(golub[1042,gol.fac=="AML"])), add=TRUE)
+```
+
+
+<span style="color:green"> 3.7a \span
+```{r}
+# determine how many genes with the label “oncogene” are in the gene expression data set
+onc <- grep("oncogene", golub.gnames[,2], ignore.case=TRUE)
+numOnc <- length(onc)
+numOnc
+```
+<span style="color:blue">
+There are 47 genes within the gene expression dataset that are labeled as oncogenes.
+</span>
+
+<span style="color:green"> 3.7b \span
+```{r}
+# Which of the oncogenes is the most highly differentially expressed?
+index <- onc[order(absDiff[onc], decreasing=TRUE)[1]]
+golub.gnames[index, 2]
+```
+<span style="color:blue">
+GRO2 GRO2 oncogene is the most highly differentially expressed oncogene.
+</span>
+
+
+<span style="color:green"> 3.7c \span
+```{r}
+# Is this gene in the top 50 highly differentially expressed genes from the whole data set?
+
+index %in% order(absDiff, decreasing=TRUE)[1:50]
+```
+<span style="color:blue">
+Yes, this gene is in the top 50 highly differentially expressed genes from the whole data set.
+</span>
+
+<span style="color:green"> 3.7d <br> \span
+
+<span style="color:blue">
+No, the gene is not one of the 50 identified as a predictive tool in Figure 3 of the Golub et al. paper. One reason for this is that the Golub paper used a different method for selecting the 50 predictor genes. Their different method (not just the absolute difference in expression means) may not have placed this gene in the top 50.
+</span>
+
+<span style="color:green"> 3.8 \span
+```{r}
+boxplot(golub[1042,] ~ gol.fac, main="Cyclin D3 expression in ALL and AML patients", xlab="Patient cancer subtype", ylab="Normalized cyclin D3 expression")
+```
+<br>
+<span style="color:blue">
+A boxplot provides additional information like the median, the interquartile range, the minimum, and the maximum of the data. A stripchart may be preferred when you want the viewer to see the individual data points. A boxplot may be used in situations where there are a lot more data points and only the summary statistics (median, quartiles, min, max) are necessary for the viewer to see. A stripchart may be used when there are much fewer data points and individual data points are more important.
+</span>
+
+<span style="color:green"> 3.9 <br> \span
+```{r}
+# create main plot with ALL data
+plot(density(golub[1042,gol.fac=="ALL"]), xlim=c(-1,3), xlab="Normalized cyclin D3 expression", main="Distribution of normalized cyclin D3 expression in leukemia patients", col=3)
+
+# overlay AML data
+lines(density(golub[1042,gol.fac=="AML"]), col=4)
+
+# add a legend
+legend(x=-1,y=0.7, legend=c("ALL","AML"),pch=15, col=c(3,4))
+```
+
+<span style="color:green"> 3.10 <br> \span
+
+<span style="color:blue">
+The curves are probability distributions and we can interpret them as such. As an example, we would use the plot to get the probability of AML patients that have a normalized cyclin D3 expression within a specific range by integrating (finding the area under the curve) the AML curve within that range. 
+</span>
+
+RUN THE FOLLOWING PREREQUISITE CODE
+```{r}
+install.packages("seqinr", repos='http://cran.us.r-project.org')
+library("seqinr")
+E_coli <- read.fasta(file="E_coli.fasta")
+```
+
+<span style="color:green"> 4.1 \span
+```{r}
+# Define a vector in R called myvec containing the integers between 7 and 21
+myvec <- c(7:21)
+
+# use indexing to replace the third entry of myvec with the character string “Hi”
+myvec[3] <- "Hi"
+
+print(myvec)
+```
+<span style="color:blue">
+When I set one of the indices of myvec to a string ("Hi"), all of the previously integer elements in the array got converted to a string format. I think this happened because all elements in a vector in R must share a common type. 
+</span>
+
+
+<span style="color:green"> 4.2 \span
+```{r}
+# Write a function that takes in a list and prints out what type of object is stored in each element of the list
+element_type <- function(lst){
+  for (element in lst){
+    print(class(element))
+  }
+}
+
+motleyCrew <- list(char = c("a", "b", "c"), num = 1:7, func = sample, logic = TRUE, missing = NA, numberList = list(one = 1, two = 2, three = 3))
+
+element_type(motleyCrew)
+```
+
+
+<span style="color:green"> 4.3 \span
+```{r}
+# determine the total number of nucleotides in the E_coli genome sequence
+Ecoli_seq <- E_coli[[1]]
+numNucleotides <- length(Ecoli_seq)
+numNucleotides
+```
+
+<span style="color:green"> 4.4\span
+```{r}
+# Print out the last 200 nucleotides of the E_coli genome sequence
+NUM_NUCLEOTIDES <- 200
+Ecoli_seq[(length(Ecoli_seq)-NUM_NUCLEOTIDES+1):length(Ecoli_seq)]
+```
+
+<span style="color:green"> 4.5\span
+```{r}
+# Find the individual nucleotide counts for the E_coli genome
+counts <- table(Ecoli_seq)
+counts
+
+```
+```{r}
+# What would the counts be for a DNA strand complimentary to this one
+countsComplement <- table(c("a", "c", "g", "t"))
+
+# set values in table countComplements
+countsComplement[["a"]] = counts[["t"]]
+countsComplement[["t"]] = counts[["a"]]
+countsComplement[["g"]] = counts[["c"]]
+countsComplement[["c"]] = counts[["g"]]
+
+countsComplement
+```
+
+<span style="color:green"> 4.6\span
+```{r}
+# Write a pair of functions called frequencyPyrimidine() and frequencyPurine() such that, given a nucleotide sequence, they will output the respective frequencies of pyrimidines and purines
+
+frequencyPyrimidine <- function(sequence){
+  return((sum(sequence == "c") + sum(sequence == "t")) / length(sequence))
+}
+
+frequencyPurine <- function(sequence){
+  return((sum(sequence == "a") + sum(sequence == "g")) / length(sequence))
+}
+```
+
+<span style="color:green"> 4.7a <br> \span
+<span style="color:blue">
+The masses of Ribonucleotide Monophosphates and Deoxyribonucleotide monophosphates are different because the sugar backbone of Ribonucleotide Monophosphates have an extra oxygen atom (because of the hydroxyl group on the 2' carbon)
+</span>
+
+<span style="color:green"> 4.7b\span
+```{r}
+# given a nucleotide sequence, outputs its weight
+seqWeight <- function(sequence, type="DNA"){
+  if(type == "RNA"){
+    return(sum(sequence == "a")*329.2 + sum(sequence == "c")*305.2 + sum(sequence == "g")*345.2 + sum(sequence == "u")*306.2)
+  }
+  else {
+    return(sum(sequence == "a")*313.2 + sum(sequence == "c")*289.2 + sum(sequence == "g")*329.2 + sum(sequence == "t")*304.2)
+  }
+}
+```
+
+<span style="color:green"> 4.7c\span
+```{r}
+# Output weight of the following DNA sequence
+seq <- c("g", "a", "t", "a", "t", "t", "c", "g", "g", "a", "g", "g", "g", "g") 
+seqWeight(seq)
+```
+
+<span style="color:green"> 4.8\span
+```{r}
+# given a DNA sequence, output the complementary strand
+compStrand <- function(seq){
+  map=c("A"="T", "T"="A","G"="C","C"="G")
+  compl <- seq
+  for(i in 1:length(compl)){
+    compl[i] <- as.character(map[seq[i]])
+  }
+  return(rev(compl))
+}
+```
+
+<span style="color:green"> 4.9\span
+```{r}
+# function that will take in as its argument a nucleotide sequence and then return its GC content
+
+GC_Content <- function(seq){
+  return((sum(seq == "g")+sum(seq == "c")) / length(seq))
+}
+
+GC_Content(Ecoli_seq)
+GC(Ecoli_seq)
+```
+<span style="color:blue">
+The GC content of the Ecoli sequence is 0.508, which is in agreement with the built in GC function in R.
+</span>
+
+<span style="color:green"> 4.10\span
+```{r}
+#  takes a nucleotide sequence’s length, a window size, and a step size as arguments and outputs a sequence of numbers containing the starting nucleotide position of each window that fully fits within the sequence
+
+windowStartPositions <- function(len, windowSize, stepSize){
+  return(seq(1, len-windowSize+1, by=stepSize))
+}
+
+```
+
+<span style="color:green"> 4.11\span
+```{r}
+#  takes a nucleotide sequence, a window size, and a step size as arguments and outputs a numeric vector containing the GC content of each window
+
+slidingGC <- function(seq, windowSize, stepSize){
+  startPos <- windowStartPositions(length(seq), windowSize, stepSize)
+  
+  GC <- startPos
+  for(i in 1:length(startPos)){
+    GC[i] <- GC_Content(seq[startPos[i]:(startPos[i]+windowSize-1)]) 
+  }
+  return(GC)
+}
+
+```
+
+<span style="color:green"> 4.12\span
+```{r}
+# takes a nucleotide sequence, a window size, and a step size as arguments and plots a scatter plot of the GC content of each window against the starting nucleotide position of each window
+
+plotSlidingGC <- function(seq, windowSize, stepSize){
+  windowStarts <- windowStartPositions(length(seq), windowSize, stepSize)
+  GC_slide <- slidingGC(seq, windowSize, stepSize)
+  plot(windowStarts, GC_slide, pch='.', type='o', xlab="Start Nucleotide Index", ylab="Window GC Content", main="GC Content of Window vs Start Nucleotide Index")
+}
+
+plotSlidingGC(Ecoli_seq, 5000, 10000)
+```
+<br>
+<span style="color:blue">
+Increasing the step size makes the graph more smooth/less granular. A small step size makes the graph fluctuate at the micro scale a lot more. Larger window sizes makes the GC content average out and therefore the Window GC content stays around 0.5. Smaller window sizes are more prone to sudden large dips/gains in GC content. 
+</span>
+
+

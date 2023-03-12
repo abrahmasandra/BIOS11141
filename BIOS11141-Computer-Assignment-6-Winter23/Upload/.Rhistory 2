@@ -1,0 +1,134 @@
+library(readxl)
+Book1 <- read_excel("Desktop/Book1.xlsx")
+View(Book1)
+hist(Book1)
+hist(Book1$`Lab 1 Score`)
+hist(Book1$`Lab 1 Score`, breaks = 5)
+hist(Book1$`Lab 1 Score`, breaks = 2)
+hist(Book1$`Lab 1 Score`, breaks = 10)
+hist(Book1$`Lab 1 Score`, breaks = 15)
+library(readxl)
+Book1 <- read_excel("Desktop/Book1.xlsx")
+View(Book1)
+hist(Book1$`Lab 1 Score`, breaks = 15)
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red")
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title("Lab 1 Scores"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title=("Lab 1 Scores"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title("Lab 1 Scores"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title="Lab 1 Scores")
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title(xlab="Lab 1 Score"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title(xlab=Lab 1 Score))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title(xlab="Lab 1 Score"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title(xlab="Lab 1 Score"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title(xlab="Lab 1 Score"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", title(xlab="Lab 1 Score"))
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red")
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red")
+hist?
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", xlab=lab1)
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", xlab="Lab1")
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", xlab="Lab1 Score")
+hist(Book1$`Lab 1 Score`, breaks = 15, col="red", xlab="Lab1 Score", main="")
+min (Book1$`Lab 1 Score)
+mean(Book1$`Lab 1 Score`)
+median(Book1$`Lab 1 Score`)
+hist (results)
+data<- 1:10000
+Samplesize<-75
+ntrails<-25
+results<-num(ntrails)
+For (i in 1:ntrails){
+newsample <-sample(data, Samplesize)
+results[i]<-var(newsample)
+}
+mean (results)
+sd (result)
+hist (results)
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+results
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+results
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+source('~/.active-rstudio-document')
+p<-matrix(1,0,0,1/4,1/2,1/4,0,0,1)
+p<-matrix(1,0,0,1/4,1/2,1/4,0,0,1, nrow=3, ncol=3)
+p<-matrix(c(1,0,0,1/4,1/2,1/4,0,0,1), nrow=3, ncol=3)
+p
+p<-matrix(c(1,0,0,1/4,1/2,1/4,0,0,1), nrow=3, ncol=3, byrow=TRUE)
+p
+install.packages("expm")
+library(expm)
+p%^%2
+p%^%100
+p%^%1000
+p%^%100000
+p%^%1000000
+p<-matrix(0.5,0.5,1,0)
+p
+p<-matrix(0.5,0.5,1,0, nrow=2, ncal=2)
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncal=2)
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncol=2)
+p
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncol=2, brow=True)
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncol=2, byrow=True)
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncol=2, brow=TRUE)
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncol=2, byrow=TRUE)
+p
+install.packages("expm")
+library(expm)
+p%^%10
+p%^%100
+p%^%1000
+p%^%100000
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncol=2, byrow=TRUE)
+p%^%100000
+install.packages("expm")
+p%^%100000
+library(expm)
+p%^%100000
+p<-matrix(c(0.5,0.5,1,0), nrow=2, ncol=2, byrow=TRUE)
+p
+p<-matrix(c(1,0,1/2,1/2), nrow=2, ncol=2, byrow=TRUE)
+p
+install.packages("expm")
+library(expm)
+p%^%2
+p%^%3
+p%^%3000
+p%^%1000000
+p<-matrix(c(1,0,0,1), nrow=2, ncol=2, byrow=TRUE)
+p
+p%^%2
+p%^%3
+p%^%300000
+p<-matrix(c(0,1,1,0), nrow=2, ncol=2, byrow=TRUE)
+p
+p%^%2
+p%^%3
+p%^%300000
+p%^%300001
+source('~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload/CompAsn6source.R')
+source('~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload/CompAsn6source.R')
+setwd("~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload")
+source('~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload/CompAsn6source.R')
+source('~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload/CompAsn6source.R')
+source('~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload/CompAsn6source.R')
+source('~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload/CompAsn6source.R')
+source('~/Desktop/Uchicago/Courses/Spring-21/Intro-Comput-Bio-Spring21/BIOS-11141-Lab-Spring21/BIOS11141-Computer-Assignment-6-Spring21/BIOS11141-Computer-Assignment-6-Spring21/Upload/CompAsn6source.R')
